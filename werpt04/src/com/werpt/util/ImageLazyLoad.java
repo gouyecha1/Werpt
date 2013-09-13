@@ -21,7 +21,7 @@ public class ImageLazyLoad {
 	
 	public Map<String, SoftReference<Bitmap>> map = null ;
 	
-	public ImageLazyLoad(){
+	public  ImageLazyLoad(){
 		map = new HashMap<String, SoftReference<Bitmap>>();
 	}
 	

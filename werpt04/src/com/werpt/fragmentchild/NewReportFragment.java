@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -36,25 +38,52 @@ import com.werpt.util.ServiceData;
 public class NewReportFragment extends Fragment implements IXListViewListener,
 		OnItemClickListener {
 	private XListView xListView;
-	private List<Werpt> list;
+	private List<Werpt> list = null;
 	private int pageCode = 1, pageSize = 5;
 	private String result;
 	private ReportAdapter adapter;
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private LayoutInflater inflater;
 	private Thread getSimpleWerptThread;
+	private int flag = 0;
+	private Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			if (flag == 0) {
+				if (msg.what == 1) {
+					list = getWeiJiSimpleList();
+					adapter.notifyDataSetChanged();
+				}
+			} else if (flag == 1) {
+				if (msg.what == 1) {
+
+					// list = getWeiJiSimpleList();
+					// System.out.println("111111");
+					// adapter.notifyDataSetChanged();
+					// System.out.println("222222");
+
+					xListView.stopRefresh();
+					System.out.println("333333");
+					Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT)
+							.show();
+					xListView.setRefreshTime(DateFormat.getCurTime());
+				}
+
+			}
+		}
+
+	};;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getSimpleWerptThread = new Thread(getSimpleWeiJi);
 		getSimpleWerptThread.start();
-		try {
-			getSimpleWerptThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		list = getWeiJiSimpleList();
+
+		// list = getWeiJiSimpleList();
 
 	}
 
@@ -94,6 +123,8 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 
 	@Override
 	public void onRefresh() {
+		flag = 1;
+		pageCode=1;
 		getSimpleWerptThread = new Thread(getSimpleWeiJi);
 		getSimpleWerptThread.start();
 		try {
@@ -103,16 +134,27 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		xListView.stopRefresh();
 		Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT).show();
+		xListView.stopRefresh();
 		xListView.setRefreshTime(DateFormat.getCurTime());
 	}
 
 	Runnable getSimpleWeiJi = new Runnable() {
+		Message msg = handler.obtainMessage();
+
 		@Override
 		public void run() {
 			result = ServiceData.getTaskData(pageCode, pageSize,
 					Adress.WEIJISIMPLEINFO);
+			if (flag == 0) {
+				if (result != "0") {
+					msg.what = 1;
+				} else {
+					msg.what = 0;
+				}
+				handler.sendMessage(msg);
+			}else{
+			}
 		}
 	};
 
@@ -146,6 +188,9 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 
 		@Override
 		public int getCount() {
+			if (list == null) {
+				return 0;
+			}
 			return list.size();
 		}
 
@@ -175,7 +220,7 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 			TextView title = (TextView) view.findViewById(R.id.title);
 			TextView content = (TextView) view.findViewById(R.id.content);
 			TextView comment = (TextView) view.findViewById(R.id.comment);
-			Werpt werpt=list.get(position);
+			Werpt werpt = list.get(position);
 			nickname.setText(werpt.getNickname());
 			addtime.setText(werpt.getAddtime());
 			Bitmap bit = load.getBitmap(pic,
@@ -194,7 +239,7 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 		Intent intent = new Intent(getActivity(), WerptDetailActivity.class);
-		intent.putExtra("wid", list.get(position).getId());
+		intent.putExtra("wid", list.get(position - 1).getId());
 		startActivity(intent);
 	}
 

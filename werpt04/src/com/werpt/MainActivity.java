@@ -109,10 +109,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 		// menu.add("发微记").setIcon(R.drawable.write)
 		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		//
-		menu.add("settings")
-			.setIcon(R.drawable.action_settings)
-			.setTitle("设置")
-			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//		menu.add("settings")
+//			.setIcon(R.drawable.action_settings)
+//			.setTitle("设置")
+//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		menu.add("search")
 				.setActionView(searchView)
 				.setIcon(R.drawable.action_search)
