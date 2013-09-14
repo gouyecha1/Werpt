@@ -8,22 +8,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore.Video;
 import android.text.Html;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.ActionBarSherlock.OnCreateOptionsMenuListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.werpt.bean.Werpt;
 import com.werpt.costant.Address;
 import com.werpt.util.ImageLazyLoad;
@@ -39,7 +41,9 @@ public class WerptDetailActivity extends Activity implements
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private ArrayList<String> thumbList;
 	private int wid;
-	private String uname="ming";
+	private String uname = "ming";
+	private PullToRefreshScrollView mPullToRefreshScrollView;
+	private Boolean flag = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,6 @@ public class WerptDetailActivity extends Activity implements
 		initView();
 		Thread t = new Thread(getWerptDetail);
 		t.start();
-		
 
 	}
 
@@ -68,6 +71,45 @@ public class WerptDetailActivity extends Activity implements
 		nickname = (TextView) findViewById(R.id.nickname);
 		addtime = (TextView) findViewById(R.id.addtime);
 		content = (TextView) findViewById(R.id.content);
+		mPullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pull_refresh_scrollview);
+		mPullToRefreshScrollView
+				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ScrollView> refreshView) {
+						flag = true;
+						new GetDataTask().execute();
+					}
+				});
+	}
+
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			String[] key = { "id", "uname" };
+			String[] value = { String.valueOf(wid), uname };
+			HashMap<String, String> map = getMap(key, value);
+			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
+			Message msg = handler.obtainMessage();
+			if (!result.equals("0")) {
+				msg.what = 1;
+			} else {
+				msg.what = 0;
+			}
+
+			handler.sendMessage(msg);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+
+			mPullToRefreshScrollView.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
 	}
 
 	@Override
@@ -94,47 +136,56 @@ public class WerptDetailActivity extends Activity implements
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == 1) {
+				if (flag) {
+					Toast.makeText(WerptDetailActivity.this, "刷新成功",
+							Toast.LENGTH_SHORT).show();
 
+				}
 				Werpt werpt = getWerptAll(result);
 				title.setText(werpt.getTitle());
-				//TODO change to getNickname()
+				// TODO change to getNickname()
 				nickname.setText(werpt.getUsername());
 				addtime.setText(werpt.getAddtime());
 				content.setText(Html.fromHtml(werpt.getContent()));
-				
+
 				thumbList = getThumbList(werpt.getThumb());
-				//TODO 获取媒体文件
-			
+				// TODO 获取媒体文件
+
+			} else {
+				Toast.makeText(WerptDetailActivity.this, "刷新失败",
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}
 
 	};
 	Runnable getWerptDetail = new Runnable() {
-		Message msg=handler.obtainMessage();
+		Message msg = handler.obtainMessage();
+
 		@Override
 		public void run() {
-			String[] key = {"id","uname"};
-			String[] value = {String.valueOf(wid),uname};
+			String[] key = { "id", "uname" };
+			String[] value = { String.valueOf(wid), uname };
 			HashMap<String, String> map = getMap(key, value);
 			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
-			if(!result.equals("0")){
-				msg.what=1;
-			}else{
-				msg.what=0;
+			if (!result.equals("0")) {
+				msg.what = 1;
+			} else {
+				msg.what = 0;
 			}
-			
+
 			handler.sendMessage(msg);
 		}
 	};
 
-	public HashMap<String, String> getMap(String[] key,String[] value){
+	public HashMap<String, String> getMap(String[] key, String[] value) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < key.length; i++) {
 			map.put(key[i], value[i]);
 		}
 		return map;
 	}
+
 	public Werpt getWerptAll(String str) {
 		Werpt w = null;
 		try {
@@ -149,7 +200,8 @@ public class WerptDetailActivity extends Activity implements
 			int comment = obj.getInt("comments");
 			int collection = obj.getInt("favs");
 			int shares = obj.getInt("shares");
-			w = new Werpt(id, uid, title, content, thumb, addtime, comment, collection, shares, 0, uname);
+			w = new Werpt(id, uid, title, content, thumb, addtime, comment,
+					collection, shares, 0, uname);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
