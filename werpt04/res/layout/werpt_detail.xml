@@ -6,47 +6,60 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <LinearLayout android:layout_width="match_parent"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             android:paddingLeft="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-            <TextView android:id="@+id/title"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp" >
+
+            <TextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="首都基辅垃圾啊升的"
-                android:textSize="18sp"
-                android:textColor="#000000"/>
-            <LinearLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/nickname"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="KING"
-                    android:textSize="12sp"
+                    android:text=""
                     android:textColor="#0000ff"
-                    />
-                <TextView android:id="@+id/addtime"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/addtime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2013-08-09 16:00"
-                    android:textSize="12sp"
-                    android:textColor="#000000"
                     android:gravity="right"
-                    />
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
             </LinearLayout>
-            <TextView android:id="@+id/content"
+
+            <TextView
+                android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="类似的护理费哈苏德良发速度和规范化ad乖哈第六分glad乖哈的来噶老师的嘎帅老公拉萨的hi刘畊宏阿萨德来工会撒奥斯 "
-                android:textSize="12sp"
-                android:textColor="#000000"/>
-            <ImageView android:id="@+id/img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/refresh"/>
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/img_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
 

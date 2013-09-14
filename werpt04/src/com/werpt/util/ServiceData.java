@@ -2,7 +2,11 @@ package com.werpt.util;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,6 +18,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -37,7 +42,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
 import com.werpt.bean.Comment;
-import com.werpt.costant.Adress;
+import com.werpt.costant.Address;
 
 public class ServiceData {
 
@@ -184,7 +189,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("pageCode", pageCode+""));
 			params.add(new BasicNameValuePair("pageSize", pageSize+""));
 			params.add(new BasicNameValuePair("uname", uname));
-			HttpPost request = new HttpPost(Adress.WEIJIUSERALL);
+			HttpPost request = new HttpPost(Address.WEIJIUSERALL);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response;
 			response = new DefaultHttpClient().execute(request);
@@ -202,7 +207,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("uname", uname));
-			HttpPost request = new HttpPost(Adress.WEIJIUSERCOUNT);
+			HttpPost request = new HttpPost(Address.WEIJIUSERCOUNT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response;
 			response = new DefaultHttpClient().execute(request);
@@ -235,7 +240,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("taskId", taskId+""));
-			HttpPost request = new HttpPost(Adress.GETTASKALLINFO);
+			HttpPost request = new HttpPost(Address.GETTASKALLINFO);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -252,7 +257,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("id", wid+""));
-			HttpPost request = new HttpPost(Adress.WEIJIALLINFO);
+			HttpPost request = new HttpPost(Address.WEIJIALLINFO);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -271,7 +276,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("id", wid+""));
 			params.add(new BasicNameValuePair("pageCode", pageCode+""));
 			params.add(new BasicNameValuePair("pageSize", pageSize+""));
-			HttpPost request = new HttpPost(Adress.GETWEIJICOMMENT);
+			HttpPost request = new HttpPost(Address.GETWEIJICOMMENT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -290,7 +295,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("id", c.getWid()+""));
 			params.add(new BasicNameValuePair("uname", c.getUname()));
 			params.add(new BasicNameValuePair("content", c.getContent()));
-			HttpPost request = new HttpPost(Adress.INSERTCOMMENT);
+			HttpPost request = new HttpPost(Address.INSERTCOMMENT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -302,12 +307,36 @@ public class ServiceData {
 		}
 		return result;
 	}	
+	public static String getServiceData(Map<String, String> map,String url){
+		String result = "0";
+		try {
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			if(map != null){
+				Set<Entry<String, String>> enty = map.entrySet();
+				Iterator<Entry<String, String>> iter = enty.iterator();
+				while(iter.hasNext()){
+					Entry<String, String> en = iter.next();
+					BasicNameValuePair basc = new BasicNameValuePair(en.getKey(), en.getValue());
+					params.add(basc);
+				}
+			}
+			HttpPost request = new HttpPost(url);
+			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
+			HttpResponse response = new DefaultHttpClient().execute(request);
+			int code = response.getStatusLine().getStatusCode();
+			if(code == 200){
+				result = EntityUtils.toString(response.getEntity(),HTTP.UTF_8);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}	
 	public static void clear(SharedPreferences share){
 		Editor edit = share.edit();
 		edit.clear();
 		edit.commit();
 	}
-	
 	public static boolean getNetWork(final Context context){
 		ProgressDialog dialog1 = new ProgressDialog(context);
     	dialog1.setMessage("正在检查网络...");

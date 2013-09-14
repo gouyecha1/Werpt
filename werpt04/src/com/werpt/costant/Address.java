@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-public class Adress {
+public class Address {
 	public static String sdCard = Environment.getExternalStorageDirectory().toString();
 	public static final String VIDEOPATH = sdCard + File.separator + "customVideo";//使用微记摄像 之后的  存储地址
 	public static final String PICPATH = sdCard + File.separator + "customPicture";//使用微记摄像 之后的照片的  存储地址
@@ -18,14 +18,14 @@ public class Adress {
 	public static String[] videoPath = new String[]{ MediaStore.Video.Media.DATA};//视频的地址
 	public static String[] imagePath = new String[]{ MediaStore.Images.Media.DATA};//图片的地址
 	
-	public static String IP = "222.92.117.23";
+	public static String IP = "192.168.1.188";
 	
 	public static String GETTASKTITLE = "http://" + IP + ":8080/WerptFiles/upload/task_getTitle";//获得悬赏的标题
 	public static String GETTASKSIMPLEINFO = "http://" + IP + ":8080/WerptFiles/upload/task_getTaskSimpleInfo";//获得悬赏的简单信息
 	public static String GETTASKALLINFO = "http://" + IP + ":8080/WerptFiles/upload/task_getTaskAllInfo";//获得悬赏的详细信息
 	public static String GETTASKCOUNTS = "http://" + IP + ":8080/WerptFiles/upload/task_getAllCounts";//获得悬赏的总个数
 	public static String UPLOADURL = "http://" + IP + ":8080/WerptFiles/upload/uploadfile_upload";//上传文件
-	public static String GETLASTTASK = "http://" + IP + ":8080/WerptFiles/upload/task_getLastTask";//获得悬赏的详细信息
+	public static String GETLASTTASK = "http://" + IP + ":8080/WerptFiles/upload/task_getLastTask";//获得悬赏的简单信息
 	
 	public static String WEIJISIMPLEINFO = "http://"+ IP +":8080/WerptFiles/upload/werpt_getSimpleInfo";//微记简单信息
 	public static String WEIJIALLINFO = "http://"+ IP +":8080/WerptFiles/upload/werpt_getAllInfo";//微记详细信息
@@ -38,6 +38,18 @@ public class Adress {
 	
 	public static String REGIST = "http://"+ IP +":8080/WerptFiles/upload/user_regist";//用户注册
 	public static String LOGIN = "http://"+ IP +":8080/WerptFiles/upload/user_login";//用户登录
+	public static String EXCELLENTPERSON = "http://"+ IP +":8080/WerptFiles/upload/user_getExcellentPerson";//优秀微记人列表
+	public static String PERSONCOUNT = "http://"+ IP +":8080/WerptFiles/upload/user_getPersonCount";//优秀微记人的个数
+	public static String PERSONCONTENT = "http://"+ IP +":8080/WerptFiles/upload/user_getPersonContent";//优秀微记人的描述
+	
+	
+	public static String ADDARTICLE = "http://"+ IP +":8080/WerptFiles/upload/article_addArticle";//添加文章
+	public static String ARTICLELIST = "http://"+ IP +":8080/WerptFiles/upload/article_getArticleList";//获得文章的列表
+	public static String ARTICLECOUNT = "http://"+ IP +":8080/WerptFiles/upload/article_getAllCount";//获得文章的总篇数
+	public static String ARTICLEALL = "http://"+ IP +":8080/WerptFiles/upload/article_getArticleAll";//获得文章的详细信息
+	
+	public static String SCANLISTINFO = "http://"+ IP +":8080/WerptFiles/upload/scan_getScanList";//获得浏览过的信息的列表
+	public static String SCANLISTCOUNT = "http://"+ IP +":8080/WerptFiles/upload/scan_getAllCount";//获得浏览过的信息的个数
 	
 	public static String WEIJIIMAGE = "http://werpt.szxuanhao.com"; //微记图片的保存地址
 }

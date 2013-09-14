@@ -18,6 +18,23 @@ public class Werpt {
 		
 	}
 	public Werpt(int id, int uid, String title, String content,
+			String thumb, String addtime, int comments, int favs, int shares,
+			int status, String username) {
+		super();
+		this.id = id;
+		this.uid = uid;
+		this.title = title;
+		this.content = content;
+		this.thumb = thumb;
+		this.addtime = addtime;
+		this.comments = comments;
+		this.favs = favs;
+		this.shares = shares;
+		this.status = status;
+		this.username = username;
+	}
+
+	public Werpt(int id, int uid, String title, String content,
 			String thumb, String addtime, int comments,
 			int status, String username,String nickname) {
 		super();
@@ -40,9 +57,10 @@ public class Werpt {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+
 	public Werpt(int id, int uid, String title, String content,
 			String thumb, String addtime, int comments, int favs, int shares,
-			int status, String username) {
+			int status, String username,String nickname) {
 		super();
 		this.id = id;
 		this.uid = uid;
@@ -55,6 +73,7 @@ public class Werpt {
 		this.shares = shares;
 		this.status = status;
 		this.username = username;
+		this.nickname=nickname;
 	}
 
 	public int getId() {

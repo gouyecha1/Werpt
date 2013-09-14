@@ -1121,7 +1121,7 @@ containing a value of this type.
         public static final int fullscreen=0x7f050013;
         public static final int help=0x7f050049;
         public static final int homeAsUp=0x7f050006;
-        public static final int img=0x7f05005f;
+        public static final int img_lay=0x7f05005f;
         public static final int left=0x7f050010;
         public static final int leftmenu=0x7f05004c;
         public static final int listMode=0x7f050002;

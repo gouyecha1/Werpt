@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.werpt.R;
 import com.werpt.WerptDetailActivity;
 import com.werpt.bean.Werpt;
-import com.werpt.costant.Adress;
+import com.werpt.costant.Address;
 import com.werpt.util.DateFormat;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
@@ -45,32 +45,16 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private LayoutInflater inflater;
 	private Thread getSimpleWerptThread;
-	private int flag = 0;
+	private Boolean flag=true;
 	private Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
-			if (flag == 0) {
-				if (msg.what == 1) {
-					list = getWeiJiSimpleList();
-					adapter.notifyDataSetChanged();
-				}
-			} else if (flag == 1) {
-				if (msg.what == 1) {
-
-					// list = getWeiJiSimpleList();
-					// System.out.println("111111");
-					// adapter.notifyDataSetChanged();
-					// System.out.println("222222");
-
-					xListView.stopRefresh();
-					System.out.println("333333");
-					Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT)
-							.show();
-					xListView.setRefreshTime(DateFormat.getCurTime());
-				}
+			if (msg.what == 1) {
+				list = getWeiJiSimpleList();
+				adapter.notifyDataSetChanged();
 
 			}
 		}
@@ -104,6 +88,7 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 
 	@Override
 	public void onLoadMore() {
+		flag=false;
 		List<Werpt> moreList = new ArrayList<Werpt>();
 		pageCode++;
 		getSimpleWerptThread = new Thread(getSimpleWeiJi);
@@ -123,8 +108,8 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 
 	@Override
 	public void onRefresh() {
-		flag = 1;
-		pageCode=1;
+		flag=false;
+		pageCode = 1;
 		getSimpleWerptThread = new Thread(getSimpleWeiJi);
 		getSimpleWerptThread.start();
 		try {
@@ -145,15 +130,14 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		@Override
 		public void run() {
 			result = ServiceData.getTaskData(pageCode, pageSize,
-					Adress.WEIJISIMPLEINFO);
-			if (flag == 0) {
-				if (result != "0") {
-					msg.what = 1;
-				} else {
-					msg.what = 0;
-				}
-				handler.sendMessage(msg);
-			}else{
+					Address.WEIJISIMPLEINFO);
+			if (result != "0") {
+				msg.what = 1;
+			} else {
+				msg.what = 0;
+			}
+			if(flag){
+			handler.sendMessage(msg);
 			}
 		}
 	};
@@ -224,7 +208,7 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 			nickname.setText(werpt.getNickname());
 			addtime.setText(werpt.getAddtime());
 			Bitmap bit = load.getBitmap(pic,
-					Adress.WEIJIIMAGE + werpt.getThumb());
+					Address.WEIJIIMAGE + werpt.getThumb());
 			if (bit != null) {
 				pic.setImageBitmap(bit);
 			}

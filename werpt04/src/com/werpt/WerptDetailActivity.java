@@ -1,15 +1,21 @@
 package com.werpt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore.Video;
+import android.text.Html;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +25,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.werpt.bean.Werpt;
+import com.werpt.costant.Address;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
 
@@ -32,6 +39,7 @@ public class WerptDetailActivity extends Activity implements
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private ArrayList<String> thumbList;
 	private int wid;
+	private String uname="ming";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +68,6 @@ public class WerptDetailActivity extends Activity implements
 		nickname = (TextView) findViewById(R.id.nickname);
 		addtime = (TextView) findViewById(R.id.addtime);
 		content = (TextView) findViewById(R.id.content);
-		img =  (ImageView) findViewById(R.id.img);
 	}
 
 	@Override
@@ -90,29 +97,44 @@ public class WerptDetailActivity extends Activity implements
 
 				Werpt werpt = getWerptAll(result);
 				title.setText(werpt.getTitle());
+				//TODO change to getNickname()
+				nickname.setText(werpt.getUsername());
+				addtime.setText(werpt.getAddtime());
+				content.setText(Html.fromHtml(werpt.getContent()));
+				
+				thumbList = getThumbList(werpt.getThumb());
+				//TODO 获取媒体文件
+			
 			}
 
 		}
 
 	};
 	Runnable getWerptDetail = new Runnable() {
-		Message msg = handler.obtainMessage();
-
+		Message msg=handler.obtainMessage();
 		@Override
 		public void run() {
-			result = ServiceData.getWeiJiJSONData(wid);
-
-			if (!result.equals("0")) {
-
-				msg.what = 1;
-			} else {
-				msg.what = 0;
+			String[] key = {"id","uname"};
+			String[] value = {String.valueOf(wid),uname};
+			HashMap<String, String> map = getMap(key, value);
+			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
+			if(!result.equals("0")){
+				msg.what=1;
+			}else{
+				msg.what=0;
 			}
+			
 			handler.sendMessage(msg);
-
 		}
 	};
 
+	public HashMap<String, String> getMap(String[] key,String[] value){
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (int i = 0; i < key.length; i++) {
+			map.put(key[i], value[i]);
+		}
+		return map;
+	}
 	public Werpt getWerptAll(String str) {
 		Werpt w = null;
 		try {
@@ -127,8 +149,7 @@ public class WerptDetailActivity extends Activity implements
 			int comment = obj.getInt("comments");
 			int collection = obj.getInt("favs");
 			int shares = obj.getInt("shares");
-			w = new Werpt(id, uid, title, content, thumb, addtime, comment,
-					collection, shares, 0, uname);
+			w = new Werpt(id, uid, title, content, thumb, addtime, comment, collection, shares, 0, uname);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
