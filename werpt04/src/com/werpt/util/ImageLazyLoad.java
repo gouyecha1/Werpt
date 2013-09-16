@@ -3,11 +3,11 @@ package com.werpt.util;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +16,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Video;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.werpt.WerptDetailActivity;
 
 public class ImageLazyLoad {
 	
@@ -56,42 +60,43 @@ public class ImageLazyLoad {
 		}).start();
 		return null;
 	}
-	public Bitmap getBitmap(final View view,final String url,final int flag){
+	public Bitmap getBitmap(final View view,final String url,final int flag,final Context context){
 		Bitmap bit = null;
-		if(map.containsKey(url)){
-			SoftReference<Bitmap> soft = map.get(url);
-			bit = soft.get();
-			if(bit != null){
-				return bit;
-			}
-		}
+		
 		final Handler handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				BitmapDrawable d = new BitmapDrawable((Bitmap)msg.obj);
-				view.setBackgroundDrawable(d);
+				Bitmap bitmap = (Bitmap) msg.obj;
+				LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+						ViewGroup.LayoutParams.WRAP_CONTENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT);
+				param.setMargins(0, 8, 0, 0);
+				ImageView iv = new ImageView(context);
+				
+				iv.setImageBitmap(bitmap);
+				((ViewGroup) view).addView(iv, param);
 			}
-		};//9092
+		};
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Bitmap b = null;
+				Bitmap bitmap = null;
 				if(flag == 1){
-					b = getImageBit(url);
+					bitmap = getImageBit(url);
 				}else if(flag == 2){
-					b = getVideoBit(url);
+					bitmap = getVideoBit(url);
 				}else if(flag == 3){
-					b = getBitmap(url);
+					bitmap = getBitmap(url);
 				}
-				if(b != null){
-					SoftReference<Bitmap> soft = new SoftReference<Bitmap>(b);
-					map.put(url, soft);
+				if(bitmap != null){
+					
 					Message msg = handler.obtainMessage();
-					msg.obj = b;
+					msg.obj = bitmap;
 					handler.sendMessage(msg);
 				}
 			}
 		}).start();
+		
 		return null;
 	}
 	public Bitmap getBitmap(String u){

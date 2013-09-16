@@ -8,12 +8,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore.Video;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -39,7 +43,7 @@ public class WerptDetailActivity extends Activity implements
 	private ActionBar mActionBar;
 	private TextView title, nickname, addtime, content;
 	private ImageView img;
-	private LinearLayout loading;
+	private LinearLayout loading, img_lay;
 	private String result;
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private ArrayList<String> thumbList;
@@ -48,6 +52,8 @@ public class WerptDetailActivity extends Activity implements
 	private PullToRefreshScrollView mPullToRefreshScrollView;
 	private Boolean flag = false;
 
+	// private List<Bitmap> list;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,10 +61,7 @@ public class WerptDetailActivity extends Activity implements
 		wid = getIntent().getIntExtra("wid", 0);
 		initActionBar();
 		initView();
-//		Thread t = new Thread(getWerptDetail);
-//		t.start();
 		new GetDataTask().execute();
-		
 
 	}
 
@@ -76,7 +79,8 @@ public class WerptDetailActivity extends Activity implements
 		nickname = (TextView) findViewById(R.id.nickname);
 		addtime = (TextView) findViewById(R.id.addtime);
 		content = (TextView) findViewById(R.id.content);
-		loading=(LinearLayout) findViewById(R.id.loading);
+		loading = (LinearLayout) findViewById(R.id.loading);
+		img_lay = (LinearLayout) findViewById(R.id.img_lay);
 		mPullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pull_refresh_scrollview);
 		mPullToRefreshScrollView
 				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
@@ -98,6 +102,7 @@ public class WerptDetailActivity extends Activity implements
 			String[] value = { String.valueOf(wid), uname };
 			HashMap<String, String> map = getMap(key, value);
 			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
+
 			Message msg = handler.obtainMessage();
 			if (!result.equals("0")) {
 				msg.what = 1;
@@ -112,11 +117,44 @@ public class WerptDetailActivity extends Activity implements
 		@Override
 		protected void onPostExecute(String[] result) {
 
-			mPullToRefreshScrollView.onRefreshComplete();
-			
 			super.onPostExecute(result);
 		}
 	}
+
+	// private class GetImg extends AsyncTask<Void, Void, String[]> {
+	//
+	// @Override
+	// protected String[] doInBackground(Void... params) {
+	// for (int i = 0; i < thumbList.size(); i++) {
+	// String url = thumbList.get(i);
+	// Bitmap bit = null;
+	// if (url.endsWith(".3GP") || url.endsWith(".3gp")
+	// || url.endsWith(".mp4") || url.endsWith(".MP4")) {
+	// bit = ThumbnailUtils.createVideoThumbnail(
+	// Address.WEIJIIMAGE + url,
+	// Video.Thumbnails.MINI_KIND);
+	// } else {
+	// bit = load.getBitmap(Address.WEIJIIMAGE + thumbList.get(i), 3);
+	// }
+	// }
+	//
+	// Message msg = handler.obtainMessage();
+	// if (!result.equals("0")) {
+	// msg.what = 1;
+	// } else {
+	// msg.what = 0;
+	// }
+	//
+	// handler.sendMessage(msg);
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(String[] result) {
+	//
+	// super.onPostExecute(result);
+	// }
+	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -143,6 +181,7 @@ public class WerptDetailActivity extends Activity implements
 			super.handleMessage(msg);
 			if (msg.what == 1) {
 				if (flag) {
+					mPullToRefreshScrollView.onRefreshComplete();
 					Toast.makeText(WerptDetailActivity.this, "刷新成功",
 							Toast.LENGTH_SHORT).show();
 
@@ -155,7 +194,24 @@ public class WerptDetailActivity extends Activity implements
 				content.setText(Html.fromHtml(werpt.getContent()));
 
 				thumbList = getThumbList(werpt.getThumb());
+				img_lay.removeAllViews();
 				// TODO 获取媒体文件
+				for (int i = 0; i < thumbList.size()-1; i++) {
+					System.out.println("thumb"+thumbList.get(i));
+
+						String url = thumbList.get(i);
+						Bitmap bit = null;
+						if (url.endsWith(".3GP") || url.endsWith(".3gp")
+								|| url.endsWith(".mp4") || url.endsWith(".MP4")) {
+							bit = ThumbnailUtils.createVideoThumbnail(
+									Address.WEIJIIMAGE + url,
+									Video.Thumbnails.MINI_KIND);
+						} else {
+							load.getBitmap(img_lay, Address.WEIJIIMAGE
+									+ thumbList.get(i), 3,
+									WerptDetailActivity.this);
+						}
+				}
 
 			} else {
 				Toast.makeText(WerptDetailActivity.this, "刷新失败",
@@ -165,24 +221,6 @@ public class WerptDetailActivity extends Activity implements
 
 		}
 
-	};
-	Runnable getWerptDetail = new Runnable() {
-		Message msg = handler.obtainMessage();
-
-		@Override
-		public void run() {
-			String[] key = { "id", "uname" };
-			String[] value = { String.valueOf(wid), uname };
-			HashMap<String, String> map = getMap(key, value);
-			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
-			if (!result.equals("0")) {
-				msg.what = 1;
-			} else {
-				msg.what = 0;
-			}
-
-			handler.sendMessage(msg);
-		}
 	};
 
 	public HashMap<String, String> getMap(String[] key, String[] value) {
