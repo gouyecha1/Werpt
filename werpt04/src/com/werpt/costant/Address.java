@@ -18,7 +18,7 @@ public class Address {
 	public static String[] videoPath = new String[]{ MediaStore.Video.Media.DATA};//视频的地址
 	public static String[] imagePath = new String[]{ MediaStore.Images.Media.DATA};//图片的地址
 	
-	public static String IP = "192.168.1.188";
+	public static String IP = "222.92.117.23";
 	
 	public static String GETTASKTITLE = "http://" + IP + ":8080/WerptFiles/upload/task_getTitle";//获得悬赏的标题
 	public static String GETTASKSIMPLEINFO = "http://" + IP + ":8080/WerptFiles/upload/task_getTaskSimpleInfo";//获得悬赏的简单信息

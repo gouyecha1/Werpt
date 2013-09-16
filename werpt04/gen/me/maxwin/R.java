@@ -14,15 +14,15 @@ public final class R {
 	public static final class id {
 		public static final int list_item_textview = 0x7f050059;
 		public static final int xListView = 0x7f05005f;
-		public static final int xlistview_footer_content = 0x7f050072;
-		public static final int xlistview_footer_hint_textview = 0x7f050074;
-		public static final int xlistview_footer_progressbar = 0x7f050073;
-		public static final int xlistview_header_arrow = 0x7f050079;
-		public static final int xlistview_header_content = 0x7f050075;
-		public static final int xlistview_header_hint_textview = 0x7f050077;
-		public static final int xlistview_header_progressbar = 0x7f05007a;
-		public static final int xlistview_header_text = 0x7f050076;
-		public static final int xlistview_header_time = 0x7f050078;
+		public static final int xlistview_footer_content = 0x7f050073;
+		public static final int xlistview_footer_hint_textview = 0x7f050075;
+		public static final int xlistview_footer_progressbar = 0x7f050074;
+		public static final int xlistview_header_arrow = 0x7f05007a;
+		public static final int xlistview_header_content = 0x7f050076;
+		public static final int xlistview_header_hint_textview = 0x7f050078;
+		public static final int xlistview_header_progressbar = 0x7f05007b;
+		public static final int xlistview_header_text = 0x7f050077;
+		public static final int xlistview_header_time = 0x7f050079;
 	}
 	public static final class layout {
 		public static final int list_item = 0x7f030019;

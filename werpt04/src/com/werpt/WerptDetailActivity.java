@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ public class WerptDetailActivity extends Activity implements
 	private ActionBar mActionBar;
 	private TextView title, nickname, addtime, content;
 	private ImageView img;
+	private LinearLayout loading;
 	private String result;
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private ArrayList<String> thumbList;
@@ -52,8 +55,10 @@ public class WerptDetailActivity extends Activity implements
 		wid = getIntent().getIntExtra("wid", 0);
 		initActionBar();
 		initView();
-		Thread t = new Thread(getWerptDetail);
-		t.start();
+//		Thread t = new Thread(getWerptDetail);
+//		t.start();
+		new GetDataTask().execute();
+		
 
 	}
 
@@ -71,6 +76,7 @@ public class WerptDetailActivity extends Activity implements
 		nickname = (TextView) findViewById(R.id.nickname);
 		addtime = (TextView) findViewById(R.id.addtime);
 		content = (TextView) findViewById(R.id.content);
+		loading=(LinearLayout) findViewById(R.id.loading);
 		mPullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.pull_refresh_scrollview);
 		mPullToRefreshScrollView
 				.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
@@ -107,7 +113,7 @@ public class WerptDetailActivity extends Activity implements
 		protected void onPostExecute(String[] result) {
 
 			mPullToRefreshScrollView.onRefreshComplete();
-
+			
 			super.onPostExecute(result);
 		}
 	}
@@ -155,6 +161,7 @@ public class WerptDetailActivity extends Activity implements
 				Toast.makeText(WerptDetailActivity.this, "刷新失败",
 						Toast.LENGTH_SHORT).show();
 			}
+			loading.setVisibility(View.GONE);
 
 		}
 

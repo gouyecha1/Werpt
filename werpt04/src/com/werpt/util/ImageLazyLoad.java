@@ -3,6 +3,7 @@ package com.werpt.util;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +15,14 @@ import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Video;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 public class ImageLazyLoad {
 	
 	public Map<String, SoftReference<Bitmap>> map = null ;
 	
-	public  ImageLazyLoad(){
+	public ImageLazyLoad(){
 		map = new HashMap<String, SoftReference<Bitmap>>();
 	}
 	
@@ -55,7 +56,7 @@ public class ImageLazyLoad {
 		}).start();
 		return null;
 	}
-	public Bitmap getBitmap(final RelativeLayout layout,final String url,final int flag){
+	public Bitmap getBitmap(final View view,final String url,final int flag){
 		Bitmap bit = null;
 		if(map.containsKey(url)){
 			SoftReference<Bitmap> soft = map.get(url);
@@ -68,7 +69,7 @@ public class ImageLazyLoad {
 			@Override
 			public void handleMessage(Message msg) {
 				BitmapDrawable d = new BitmapDrawable((Bitmap)msg.obj);
-				layout.setBackgroundDrawable(d);
+				view.setBackgroundDrawable(d);
 			}
 		};//9092
 		new Thread(new Runnable() {
@@ -79,6 +80,8 @@ public class ImageLazyLoad {
 					b = getImageBit(url);
 				}else if(flag == 2){
 					b = getVideoBit(url);
+				}else if(flag == 3){
+					b = getBitmap(url);
 				}
 				if(b != null){
 					SoftReference<Bitmap> soft = new SoftReference<Bitmap>(b);
@@ -99,7 +102,7 @@ public class ImageLazyLoad {
 			conn.setDoInput(true);
 			InputStream in = conn.getInputStream();
 			BitmapFactory.Options option = new BitmapFactory.Options();
-			option.inSampleSize = 5;
+			option.inSampleSize = getInSampleSize(u);
 			map = BitmapFactory.decodeStream(in, null, option);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,5 +119,31 @@ public class ImageLazyLoad {
 	public Bitmap getVideoBit(String url){
 		Bitmap bit = ThumbnailUtils.createVideoThumbnail(url, Video.Thumbnails.MINI_KIND);
 		return bit;
+	}
+	public int getInSampleSize(String u){
+		int percent = 1;
+		try {
+			URL url = new URL(u);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setDoInput(true);
+			InputStream in = conn.getInputStream();
+			BitmapFactory.Options op = new BitmapFactory.Options();
+			op.inJustDecodeBounds = true;
+			Bitmap m = BitmapFactory.decodeStream(in, null, op);
+			int imageWidth = op.outWidth;
+			int imageHeight = op.outHeight;
+			if(imageWidth >300 && imageHeight > 200){
+				int w_num = imageWidth / 300;
+				int h_num = imageHeight / 200;
+				percent = Math.max(w_num, h_num);
+			}
+			if(percent == 0){
+				percent = 1;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return percent;
 	}
 }

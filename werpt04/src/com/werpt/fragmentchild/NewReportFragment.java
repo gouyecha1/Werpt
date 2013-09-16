@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import com.werpt.util.ServiceData;
 public class NewReportFragment extends Fragment implements IXListViewListener,
 		OnItemClickListener {
 	private XListView xListView;
+	private LinearLayout loading;
 	private List<Werpt> list = null;
 	private int pageCode = 1, pageSize = 5;
 	private String result;
@@ -45,18 +48,32 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private LayoutInflater inflater;
 	private Thread getSimpleWerptThread;
-	private Boolean flag=true;
+	private int flag = 0;
 	private Handler handler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
-			if (msg.what == 1) {
+			if (flag == 0) {
+				if (msg.what == 1) {
+					list = getWeiJiSimpleList();
+					adapter.notifyDataSetChanged(); 
+					loading.setVisibility(View.GONE);
+				}
+			} else if (flag == 1) {
 				list = getWeiJiSimpleList();
 				adapter.notifyDataSetChanged();
-
+				Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT)
+						.show();
+			} else if (flag == 2) {
+				List<Werpt> moreList = getWeiJiSimpleList();
+				for (int i = 0; i < moreList.size(); i++) {
+					list.add(moreList.get(i));
+				}
+				adapter.notifyDataSetChanged();
 			}
+			
 		}
 
 	};;
@@ -64,11 +81,6 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getSimpleWerptThread = new Thread(getSimpleWeiJi);
-		getSimpleWerptThread.start();
-
-		// list = getWeiJiSimpleList();
-
 	}
 
 	@Override
@@ -77,70 +89,64 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		this.inflater = inflater;
 		View convertView = inflater.inflate(R.layout.new_report, null);
 		xListView = (XListView) convertView.findViewById(R.id.xListView);
+		loading = (LinearLayout) convertView.findViewById(R.id.loading);
 		xListView.setXListViewListener(this);
 		xListView.setPullLoadEnable(true);
 		adapter = new ReportAdapter();
 		xListView.setAdapter(adapter);
 		xListView.setOnItemClickListener(this);
+		new GetDataTask().execute();
 		return convertView;
 
 	}
 
-	@Override
-	public void onLoadMore() {
-		flag=false;
-		List<Werpt> moreList = new ArrayList<Werpt>();
-		pageCode++;
-		getSimpleWerptThread = new Thread(getSimpleWeiJi);
-		getSimpleWerptThread.start();
-		try {
-			getSimpleWerptThread.join();
-			moreList = getWeiJiSimpleList();
-			for (int i = 0; i < moreList.size(); i++) {
-				list.add(moreList.get(i));
-			}
-			adapter.notifyDataSetChanged();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		xListView.stopLoadMore();
-	}
-
-	@Override
-	public void onRefresh() {
-		flag=false;
-		pageCode = 1;
-		getSimpleWerptThread = new Thread(getSimpleWeiJi);
-		getSimpleWerptThread.start();
-		try {
-			getSimpleWerptThread.join();
-			list = getWeiJiSimpleList();
-			adapter.notifyDataSetChanged();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		Toast.makeText(getActivity(), "刷新成功", Toast.LENGTH_SHORT).show();
-		xListView.stopRefresh();
-		xListView.setRefreshTime(DateFormat.getCurTime());
-	}
-
-	Runnable getSimpleWeiJi = new Runnable() {
-		Message msg = handler.obtainMessage();
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 
 		@Override
-		public void run() {
+		protected String[] doInBackground(Void... params) {
 			result = ServiceData.getTaskData(pageCode, pageSize,
 					Address.WEIJISIMPLEINFO);
-			if (result != "0") {
+			Message msg = handler.obtainMessage();
+			if (!result.equals("0")) {
 				msg.what = 1;
 			} else {
 				msg.what = 0;
 			}
-			if(flag){
+
 			handler.sendMessage(msg);
-			}
+			return null;
 		}
-	};
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			onLoad();
+			
+			super.onPostExecute(result);
+		}
+	}
+
+	private void onLoad() {
+		// TODO Auto-generated method stub
+		xListView.stopLoadMore();
+		xListView.stopRefresh();
+		xListView.setRefreshTime(DateFormat.getCurTime());
+	}
+
+	@Override
+	public void onLoadMore() {
+		flag = 2;
+		pageCode++;
+		new GetDataTask().execute();
+
+	}
+
+	@Override
+	public void onRefresh() {
+		flag = 1;
+		pageCode = 1;
+		new GetDataTask().execute();
+
+	}
 
 	public List<Werpt> getWeiJiSimpleList() {
 		List<Werpt> list = new ArrayList<Werpt>();
@@ -168,6 +174,15 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		return list;
 	}
 
+	static class ViewHolder {
+		TextView nickname;
+		TextView addtime;
+		ImageView pic;
+		TextView title;
+		TextView content;
+		TextView comment;
+	}
+
 	class ReportAdapter extends BaseAdapter {
 
 		@Override
@@ -190,35 +205,58 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup container) {
-			View view = null;
-			if (convertView == null) {
-				view = inflater.inflate(R.layout.new_report_item, null);
-			} else {
-				view = convertView;
-			}
-			// ImageView userphoto = (ImageView)
-			// view.findViewById(R.id.userphoto);
-			TextView nickname = (TextView) view.findViewById(R.id.nickname);
-			TextView addtime = (TextView) view.findViewById(R.id.addtime);
-			ImageView pic = (ImageView) view.findViewById(R.id.pic);
-			TextView title = (TextView) view.findViewById(R.id.title);
-			TextView content = (TextView) view.findViewById(R.id.content);
-			TextView comment = (TextView) view.findViewById(R.id.comment);
+			ViewHolder holder=null;
+
 			Werpt werpt = list.get(position);
-			nickname.setText(werpt.getNickname());
-			addtime.setText(werpt.getAddtime());
-			Bitmap bit = load.getBitmap(pic,
-					Address.WEIJIIMAGE + werpt.getThumb());
-			if (bit != null) {
-				pic.setImageBitmap(bit);
+
+			if (convertView == null) {
+				holder = new ViewHolder();
+				convertView = inflater.inflate(R.layout.new_report_item, null);
+				holder.nickname = (TextView) convertView
+						.findViewById(R.id.nickname);
+				holder.addtime = (TextView) convertView
+						.findViewById(R.id.addtime);
+				holder.pic = (ImageView) convertView.findViewById(R.id.pic);
+				holder.title = (TextView) convertView.findViewById(R.id.title);
+				holder.content = (TextView) convertView
+						.findViewById(R.id.content);
+				holder.comment = (TextView) convertView
+						.findViewById(R.id.comment);
+				
+				holder.nickname.setText(werpt.getNickname());
+				holder.addtime.setText(werpt.getAddtime());
+				Bitmap bit = load.getBitmap(holder.pic,
+						Address.WEIJIIMAGE + werpt.getThumb());
+				if (bit != null) {
+					holder.pic.setImageBitmap(bit);
+				}
+				holder.title.setText(werpt.getTitle());
+				holder.content.setText(Html.fromHtml(werpt.getContent()));
+				holder.comment.setText(werpt.getComments() + "");
+				
+				
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+
+				holder.nickname.setText(werpt.getNickname());
+				holder.addtime.setText(werpt.getAddtime());
+				Bitmap bit = load.getBitmap(holder.pic,
+						Address.WEIJIIMAGE + werpt.getThumb());
+				if (bit != null) {
+					holder.pic.setImageBitmap(bit);
+				}
+				holder.title.setText(werpt.getTitle());
+				holder.content.setText(Html.fromHtml(werpt.getContent()));
+				holder.comment.setText(werpt.getComments() + "");
 			}
-			title.setText(werpt.getTitle());
-			content.setText(Html.fromHtml(werpt.getContent()));
-			comment.setText(werpt.getComments() + "");
-			return view;
+			
+			
+			return convertView;
 		}
 	}
-
+	
+	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
