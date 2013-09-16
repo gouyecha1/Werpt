@@ -121,40 +121,6 @@ public class WerptDetailActivity extends Activity implements
 		}
 	}
 
-	// private class GetImg extends AsyncTask<Void, Void, String[]> {
-	//
-	// @Override
-	// protected String[] doInBackground(Void... params) {
-	// for (int i = 0; i < thumbList.size(); i++) {
-	// String url = thumbList.get(i);
-	// Bitmap bit = null;
-	// if (url.endsWith(".3GP") || url.endsWith(".3gp")
-	// || url.endsWith(".mp4") || url.endsWith(".MP4")) {
-	// bit = ThumbnailUtils.createVideoThumbnail(
-	// Address.WEIJIIMAGE + url,
-	// Video.Thumbnails.MINI_KIND);
-	// } else {
-	// bit = load.getBitmap(Address.WEIJIIMAGE + thumbList.get(i), 3);
-	// }
-	// }
-	//
-	// Message msg = handler.obtainMessage();
-	// if (!result.equals("0")) {
-	// msg.what = 1;
-	// } else {
-	// msg.what = 0;
-	// }
-	//
-	// handler.sendMessage(msg);
-	// return null;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(String[] result) {
-	//
-	// super.onPostExecute(result);
-	// }
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(android.view.Menu menu) {
@@ -194,10 +160,19 @@ public class WerptDetailActivity extends Activity implements
 				content.setText(Html.fromHtml(werpt.getContent()));
 
 				thumbList = getThumbList(werpt.getThumb());
+				
 				img_lay.removeAllViews();
 				// TODO 获取媒体文件
 				for (int i = 0; i < thumbList.size()-1; i++) {
 					System.out.println("thumb"+thumbList.get(i));
+					LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+							ViewGroup.LayoutParams.WRAP_CONTENT,
+							ViewGroup.LayoutParams.WRAP_CONTENT);
+					param.setMargins(0, 0, 0, 4);
+					ImageView iv = new ImageView(WerptDetailActivity.this);
+					iv.setImageResource(R.drawable.werpt_pic_thumb_default);
+					img_lay.addView(iv, param);
+					
 
 						String url = thumbList.get(i);
 						Bitmap bit = null;
@@ -207,10 +182,12 @@ public class WerptDetailActivity extends Activity implements
 									Address.WEIJIIMAGE + url,
 									Video.Thumbnails.MINI_KIND);
 						} else {
-							load.getBitmap(img_lay, Address.WEIJIIMAGE
+							load.getBitmap(iv, Address.WEIJIIMAGE
 									+ thumbList.get(i), 3,
 									WerptDetailActivity.this);
 						}
+						
+						
 				}
 
 			} else {

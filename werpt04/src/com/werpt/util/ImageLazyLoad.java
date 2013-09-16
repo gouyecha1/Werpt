@@ -60,21 +60,24 @@ public class ImageLazyLoad {
 		}).start();
 		return null;
 	}
-	public Bitmap getBitmap(final View view,final String url,final int flag,final Context context){
+	public Bitmap getBitmap(final View iv,final String url,final int flag,final Context context){
 		Bitmap bit = null;
 		
 		final Handler handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
 				Bitmap bitmap = (Bitmap) msg.obj;
-				LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-						ViewGroup.LayoutParams.WRAP_CONTENT,
-						ViewGroup.LayoutParams.WRAP_CONTENT);
-				param.setMargins(0, 8, 0, 0);
-				ImageView iv = new ImageView(context);
+//				LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+//						ViewGroup.LayoutParams.WRAP_CONTENT,
+//						ViewGroup.LayoutParams.WRAP_CONTENT);
+//				param.setMargins(0, 0, 0, 4);
+//				ImageView iv = new ImageView(context);
 				
-				iv.setImageBitmap(bitmap);
-				((ViewGroup) view).addView(iv, param);
+				((ImageView) iv).setImageBitmap(bitmap);
+//				((ViewGroup) view).addView(iv, param);
+				
+				
+				
 			}
 		};
 		new Thread(new Runnable() {
