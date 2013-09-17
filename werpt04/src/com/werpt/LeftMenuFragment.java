@@ -1,10 +1,26 @@
 package com.werpt;
 
-import com.werpt.util.ServiceData;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
-import android.opengl.Visibility;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +32,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LeftMenuFragment extends Fragment {
-	Button login;
-	ImageView userPhoto;
-	TextView nickName;
-	ImageView camera, video, write;
-	LinearLayout refresh, setting, feedback, help, about,logout;
+import com.werpt.costant.Address;
+import com.werpt.util.ServiceData;
 
+public class LeftMenuFragment extends Fragment {
+	private Button login;
+	private ImageView userPhoto;
+	private TextView nickName;
+	private ImageView camera, video, write;
+	private LinearLayout refresh, setting, feedback, help, about, logout;
+	private String uName, uPass;
+	private SharedPreferences sp;
+	private String result;
+	private String url;
+	private LinearLayout user;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,6 +54,12 @@ public class LeftMenuFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		sp = getActivity().getSharedPreferences("user", 0);
+		uName = sp.getString("uname", "");
+		uPass=sp.getString("upass", "");
+		url = Address.LOGIN;
+		new GetDataTask().execute();
+		
 		View convertView = inflater.inflate(R.layout.left_menu_content, null);
 		login = (Button) convertView.findViewById(R.id.login);
 		userPhoto = (ImageView) convertView.findViewById(R.id.userphoto);
@@ -43,7 +72,8 @@ public class LeftMenuFragment extends Fragment {
 		feedback = (LinearLayout) convertView.findViewById(R.id.feedback);
 		help = (LinearLayout) convertView.findViewById(R.id.help);
 		about = (LinearLayout) convertView.findViewById(R.id.about);
-		logout=(LinearLayout) convertView.findViewById(R.id.logout);
+		logout = (LinearLayout) convertView.findViewById(R.id.logout);
+		user=(LinearLayout) convertView.findViewById(R.id.user);
 		login.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -51,7 +81,7 @@ public class LeftMenuFragment extends Fragment {
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
 				// startActivity(intent);
 				login.setClickable(false);
-				
+
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -82,8 +112,9 @@ public class LeftMenuFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 
+				Intent intent=new Intent(getActivity(),SendWerptActivity.class);
+				startActivity(intent);
 			}
 		});
 		refresh.setOnClickListener(new OnClickListener() {
@@ -127,25 +158,102 @@ public class LeftMenuFragment extends Fragment {
 			}
 		});
 		logout.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				SharedPreferences sp=getActivity().getSharedPreferences("user", 0);
+				Editor edit=sp.edit();
+				edit.remove("user");
+				edit.commit();
+				login.setVisibility(View.VISIBLE);
+				user.setVisibility(View.GONE);
+				login.setClickable(true);
+
 			}
 		});
 		return convertView;
 	}
 
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			if (msg.what == 1) {
+				try {
+					JSONObject obj = new JSONObject(result);
+					String flag = obj.getString("flag");
+					if (flag.equals("true")) {
+						System.out.println("11111111111111");
+						login.setVisibility(View.GONE);
+						user.setVisibility(View.VISIBLE);
+						nickName.setText(uName);
+					} else {
+						
+						login.setVisibility(View.VISIBLE);
+						user.setVisibility(View.GONE);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} else {
+				Toast.makeText(getActivity(), "连接失败", Toast.LENGTH_SHORT)
+						.show();
+			}
+		};
+	};
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			result = getData(uName, uPass);
+
+			Message msg = handler.obtainMessage();
+			if (result != null) {
+				msg.what = 1;
+			} else {
+				msg.what = 0;
+			}
+
+			handler.sendMessage(msg);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+
+			super.onPostExecute(result);
+		}
+	}
+
+	public String getData(String userName, String passWord) {
+		String result = null;
+		try {
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("username", uName));
+			params.add(new BasicNameValuePair("password", uPass));
+			HttpPost request = new HttpPost(url);
+			request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			HttpResponse response;
+			response = new DefaultHttpClient().execute(request);
+			if (response.getStatusLine().getStatusCode() == 200) {
+				result = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+				System.out.println(result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == 100) {
-			login.setVisibility(View.GONE);
-			userPhoto.setVisibility(View.VISIBLE);
-			nickName.setVisibility(View.VISIBLE);
-
-		}else {
+		
+		 if (resultCode == 200) {
+			sp = getActivity().getSharedPreferences("user", 0);
+			uName = sp.getString("uname", "");
+			uPass=sp.getString("upass", "");
+			url = Address.LOGIN;
+			new GetDataTask().execute();
+			
+		} else {
 			login.setClickable(true);
 		}
 	}

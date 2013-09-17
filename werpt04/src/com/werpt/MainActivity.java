@@ -31,7 +31,8 @@ public class MainActivity extends SlidingFragmentActivity implements
 	private long exitTime = 0;
 	private ActionBar mActionBar;
 	private SlidingMenu mSlidingMenu;
-	private ActionBarSherlock mSherlock = ActionBarSherlock.wrap(this);;
+	private ActionBarSherlock mSherlock = ActionBarSherlock.wrap(this);
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,22 +98,6 @@ public class MainActivity extends SlidingFragmentActivity implements
 				.getThemedContext());
 		searchView.setQueryHint("search...");
 
-		// menu.add("refresh")
-		// .setIcon(R.drawable.refresh)
-		// .setShowAsAction(
-		// MenuItem.SHOW_AS_ACTION_ALWAYS
-		// | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		// menu.add("拍照").setIcon(R.drawable.camera)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		// menu.add("拍视频").setIcon(R.drawable.video)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		// menu.add("发微记").setIcon(R.drawable.write)
-		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		//
-//		menu.add("settings")
-//			.setIcon(R.drawable.action_settings)
-//			.setTitle("设置")
-//			.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		menu.add("search")
 				.setActionView(searchView)
 				.setIcon(R.drawable.action_search)

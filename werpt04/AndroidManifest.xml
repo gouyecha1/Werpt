@@ -24,15 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.werpt.WerptDetailActivity" 
-            android:uiOptions="splitActionBarWhenNarrow"
-            >
+        <activity
+            android:name="com.werpt.WerptDetailActivity"
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity android:name="com.werpt.LoginActivity" >
         </activity>
         <activity android:name="com.werpt.RegistActivity" >
         </activity>
         <activity android:name="com.werpt.CameraActivity" >
+        </activity>
+        <activity android:name="com.werpt.SendWerptActivity" >
         </activity>
     </application>
 
