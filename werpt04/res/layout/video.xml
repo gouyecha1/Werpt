@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/werpt_camera_video_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" />
+
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right" >
+
+        <LinearLayout
+            android:id="@+id/werpt_video_layout_bg"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#ffffff"
+            android:orientation="vertical" />
+
+        <ImageView
+            android:id="@+id/werpt_video_start_or_stop"
+            android:layout_width="56dp"
+            android:layout_height="fill_parent" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/weprt_video_recorde_layout"
+        android:layout_width="66dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/werpt_video_linearlayout_shape"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/weprt_video_recorde_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="录制时间"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+</FrameLayout>

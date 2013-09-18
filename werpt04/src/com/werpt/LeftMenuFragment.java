@@ -98,7 +98,14 @@ public class LeftMenuFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				if (ServiceData.hasSDCard()) {
+					Intent intent = new Intent(getActivity(),
+							VideoActivity.class);
+					startActivity(intent);
+				} else {
+					Toast.makeText(getActivity(), "未插入内存卡", Toast.LENGTH_SHORT)
+							.show();
+				}
 
 			}
 		});

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/pic_lay"
+        android:id="@+id/werpt_picture_linearlayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/pic_all_lay"
+        android:id="@+id/take_picture_all_layout"
         android:layout_width="55dp"
         android:layout_height="fill_parent"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <LinearLayout
-            android:id="@+id/take_pic_lay"
+            android:id="@+id/werpt_take_picture_layout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="#ffffff"
@@ -36,11 +37,11 @@
                 android:layout_weight="0.4" />
 
             <ImageView
-                android:id="@+id/take_pic_img"
+                android:id="@+id/werpt_take_picture_imageview"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.2" />
+                android:layout_weight="0.2"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -48,24 +49,24 @@
                 android:layout_weight="0.2" />
 
             <ImageView
-                android:id="@+id/show_pic_img"
+                android:id="@+id/werpt_show_picture_imageview"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.2"
-                android:src="@drawable/werpt_pic_thumb_default" />
+                android:src="@drawable/default_image"/>
         </LinearLayout>
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/show_pic_framelay"
+        android:id="@+id/show_picture_framelayout"
         android:layout_width="55dp"
         android:layout_height="fill_parent"
         android:layout_marginRight="9dp"
-        android:layout_toLeftOf="@id/pic_all_lay" >
+        android:layout_toLeftOf="@id/take_picture_all_layout" >
 
         <LinearLayout
-            android:id="@+id/show_pic_bg"
+            android:id="@+id/werpt_show_picture_bg"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="#ffffff"
@@ -77,7 +78,7 @@
             android:layout_height="fill_parent" >
 
             <LinearLayout
-                android:id="@+id/show_pic_lay"
+                android:id="@+id/werpt_show_picture_linearlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

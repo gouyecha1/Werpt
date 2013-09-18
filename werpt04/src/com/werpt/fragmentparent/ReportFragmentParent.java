@@ -26,7 +26,7 @@ public  class ReportFragmentParent extends Fragment {
 				container, false);
 		ViewPager pager = (ViewPager) convertView.findViewById(R.id.pager);
 		PagerTabStrip tabStrip=(PagerTabStrip) convertView.findViewById(R.id.tabstrip);
-		tabStrip.setTabIndicatorColor(Color.MAGENTA);
+		tabStrip.setTabIndicatorColor(Color.RED);
 		
 //		tabStrip.setBackgroundColor(0xffbb00bb);
 		
