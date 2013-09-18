@@ -47,7 +47,6 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 	private ReportAdapter adapter;
 	private ImageLazyLoad load = new ImageLazyLoad();
 	private LayoutInflater inflater;
-	private Thread getSimpleWerptThread;
 	private int flag = 0;
 	private Handler handler = new Handler() {
 
@@ -174,13 +173,13 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		return list;
 	}
 
-	static class ViewHolder {
-		TextView nickname;
-		TextView addtime;
-		ImageView pic;
-		TextView title;
-		TextView content;
-		TextView comment;
+	public final class ViewHolder {
+		public TextView nickname;
+		public TextView addtime;
+		public ImageView pic;
+		public TextView title;
+		public TextView content;
+		public TextView comment;
 	}
 
 	class ReportAdapter extends BaseAdapter {
@@ -223,35 +222,22 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 				holder.comment = (TextView) convertView
 						.findViewById(R.id.comment);
 				
-				holder.nickname.setText(werpt.getNickname());
-				holder.addtime.setText(werpt.getAddtime());
-				Bitmap bit = load.getBitmap(holder.pic,
-						Address.WEIJIIMAGE + werpt.getThumb());
-				if (bit != null) {
-					holder.pic.setImageBitmap(bit);
-				}
-				holder.title.setText(werpt.getTitle());
-				holder.content.setText(Html.fromHtml(werpt.getContent()));
-				holder.comment.setText(werpt.getComments() + "");
-				
-				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 
-				holder.nickname.setText(werpt.getNickname());
-				holder.addtime.setText(werpt.getAddtime());
-				Bitmap bit = load.getBitmap(holder.pic,
-						Address.WEIJIIMAGE + werpt.getThumb());
-				if (bit != null) {
-					holder.pic.setImageBitmap(bit);
-				}
-				holder.title.setText(werpt.getTitle());
-				holder.content.setText(Html.fromHtml(werpt.getContent()));
-				holder.comment.setText(werpt.getComments() + "");
 			}
 			
-			
+			holder.nickname.setText(werpt.getNickname());
+			holder.addtime.setText(werpt.getAddtime());
+			Bitmap bit = load.getBitmap(holder.pic,
+					Address.WEIJIIMAGE + werpt.getThumb());
+			if (bit != null) {
+				holder.pic.setImageBitmap(bit);
+			}
+			holder.title.setText(werpt.getTitle());
+			holder.content.setText(Html.fromHtml(werpt.getContent()).toString());
+			holder.comment.setText(werpt.getComments() + "");
 			return convertView;
 		}
 	}

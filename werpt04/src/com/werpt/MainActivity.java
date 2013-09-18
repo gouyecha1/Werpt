@@ -104,6 +104,29 @@ public class MainActivity extends SlidingFragmentActivity implements
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_ALWAYS
 								| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		menu.add("login")
+		.setTitle("注销|登录")
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add("check_refresh")
+		.setTitle("检查更新")
+		.setIcon(R.drawable.refresh)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add("settings")
+		.setTitle("设置")
+		.setIcon(R.drawable.action_settings)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add("feedback")
+		.setTitle("用户反馈")
+		.setIcon(R.drawable.feedback)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add("help")
+		.setTitle("帮助")
+		.setIcon(R.drawable.help)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		menu.add("about")
+		.setTitle("关于")
+		.setIcon(R.drawable.about)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 		return true;
 	}
 

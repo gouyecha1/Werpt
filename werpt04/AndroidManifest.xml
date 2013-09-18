@@ -36,6 +36,8 @@
         </activity>
         <activity android:name="com.werpt.SendWerptActivity" >
         </activity>
+        <activity android:name="com.werpt.TaskDetailActivity" >
+        </activity>
     </application>
 
 </manifest>
