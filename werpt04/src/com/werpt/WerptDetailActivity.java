@@ -9,8 +9,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,7 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.werpt.bean.Werpt;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
 
@@ -58,8 +61,17 @@ public class WerptDetailActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.werpt_detail);
+		
 		wid = getIntent().getIntExtra("wid", 0);
 		initActionBar();
+		if(Build.VERSION.SDK_INT<Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+			BitmapDrawable bg=(BitmapDrawable) getResources().getDrawable(R.drawable.bg_striped);
+			bg.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			mActionBar.setBackgroundDrawable(bg);
+			 BitmapDrawable bgSplit = (BitmapDrawable)getResources().getDrawable(R.drawable.bg_striped_split_img);
+			 bgSplit.setTileModeXY(TileMode.REPEAT, TileMode.REPEAT);
+			 mActionBar.setBackgroundDrawable(bgSplit);
+		}
 		initView();
 		new GetDataTask().execute();
 
@@ -101,7 +113,7 @@ public class WerptDetailActivity extends Activity implements
 			String[] key = { "id", "uname" };
 			String[] value = { String.valueOf(wid), uname };
 			HashMap<String, String> map = getMap(key, value);
-			result = ServiceData.getServiceData(map, Address.WEIJIALLINFO);
+			result = ServiceData.getServiceData(map, MyAddress.WEIJIALLINFO);
 
 			Message msg = handler.obtainMessage();
 			if (!result.equals("0")) {
@@ -179,10 +191,10 @@ public class WerptDetailActivity extends Activity implements
 						if (url.endsWith(".3GP") || url.endsWith(".3gp")
 								|| url.endsWith(".mp4") || url.endsWith(".MP4")) {
 							bit = ThumbnailUtils.createVideoThumbnail(
-									Address.WEIJIIMAGE + url,
+									MyAddress.WEIJIIMAGE + url,
 									Video.Thumbnails.MINI_KIND);
 						} else {
-							load.getBitmap(iv, Address.WEIJIIMAGE
+							load.getBitmap(iv, MyAddress.WEIJIIMAGE
 									+ thumbList.get(i), 3,
 									WerptDetailActivity.this);
 						}

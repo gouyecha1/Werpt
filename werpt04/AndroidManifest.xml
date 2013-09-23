@@ -41,6 +41,7 @@
         </activity>
         <activity
             android:name="com.werpt.WerptDetailActivity"
+            android:theme="@style/Theme.Styled"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity android:name="com.werpt.LoginActivity" >
@@ -56,6 +57,8 @@
         <activity android:name="com.werpt.SendWerptActivity" >
         </activity>
         <activity android:name="com.werpt.TaskDetailActivity" >
+        </activity>
+        <activity android:name="com.werpt.PicStoreActivity" >
         </activity>
     </application>
 

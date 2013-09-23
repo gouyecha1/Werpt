@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.ServiceData;
 
 public class VideoActivity extends Activity {
@@ -130,7 +130,7 @@ public class VideoActivity extends Activity {
 
 	public void startMediaRecorder() {
 		System.out.println("进入了摄像的初始化方法");
-		String path = Address.VIDEOPATH;
+		String path = MyAddress.VIDEOPATH;
 		if (!new File(path).exists()) {
 			new File(path).mkdirs();
 		}

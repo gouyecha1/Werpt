@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.werpt.R;
 import com.werpt.TaskDetailActivity;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.DateFormat;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
@@ -126,7 +126,7 @@ public class NewRewardFragment extends Fragment implements IXListViewListener,
 		@Override
 		protected String[] doInBackground(Void... params) {
 			result = ServiceData.getTaskData(pageCode, pageSize,
-					Address.GETTASKSIMPLEINFO);
+					MyAddress.GETTASKSIMPLEINFO);
 			Message msg = handler.obtainMessage();
 			if (!result.equals("0")) {
 				msg.what = 1;
@@ -197,7 +197,7 @@ public class NewRewardFragment extends Fragment implements IXListViewListener,
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			Bitmap bit = load.getBitmap(holder.pic, Address.WEIJIIMAGE
+			Bitmap bit = load.getBitmap(holder.pic, MyAddress.WEIJIIMAGE
 					+ task.getPic());
 
 			holder.pic.setImageBitmap(bit);

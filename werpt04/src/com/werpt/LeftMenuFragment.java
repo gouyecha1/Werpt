@@ -32,7 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.ServiceData;
 
 public class LeftMenuFragment extends Fragment {
@@ -45,6 +45,7 @@ public class LeftMenuFragment extends Fragment {
 	private String result;
 	private String url;
 	private LinearLayout user;
+	private Button picStore,videoStore;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class LeftMenuFragment extends Fragment {
 		sp = getActivity().getSharedPreferences("user", 0);
 		uName = sp.getString("uname", "");
 		uPass = sp.getString("upass", "");
-		url = Address.LOGIN;
+		url = MyAddress.LOGIN;
 		new GetDataTask().execute();
 
 		View convertView = inflater.inflate(R.layout.left_menu_content, null);
@@ -68,6 +69,8 @@ public class LeftMenuFragment extends Fragment {
 		video = (ImageView) convertView.findViewById(R.id.video);
 		write = (ImageView) convertView.findViewById(R.id.write);
 		user = (LinearLayout) convertView.findViewById(R.id.user);
+		picStore=(Button) convertView.findViewById(R.id.pic_store);
+		videoStore=(Button) convertView.findViewById(R.id.video_store);
 		login.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -117,6 +120,27 @@ public class LeftMenuFragment extends Fragment {
 				Intent intent = new Intent(getActivity(),
 						SendWerptActivity.class);
 				startActivity(intent);
+			}
+		});
+		picStore.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(ServiceData.hasSDCard()){
+				Intent intent = new Intent(getActivity(),
+						MediaStoreActivity.class);
+				startActivity(intent);
+				}else{
+					Toast.makeText(getActivity(), "未插入内存卡", Toast.LENGTH_SHORT)
+					.show();
+				}
+			}
+		});
+		videoStore.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
 			}
 		});
 		return convertView;
@@ -200,7 +224,7 @@ public class LeftMenuFragment extends Fragment {
 			sp = getActivity().getSharedPreferences("user", 0);
 			uName = sp.getString("uname", "");
 			uPass = sp.getString("upass", "");
-			url = Address.LOGIN;
+			url = MyAddress.LOGIN;
 			new GetDataTask().execute();
 
 		} else {

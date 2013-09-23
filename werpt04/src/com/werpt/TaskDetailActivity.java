@@ -29,7 +29,7 @@ import com.actionbarsherlock.view.Menu;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
 import com.werpt.util.Task;
@@ -108,7 +108,7 @@ public class TaskDetailActivity extends Activity implements
 				}
 				Task t = getTaskAll(result);
 				
-				url = Address.WEIJIIMAGE + t.getPic();
+				url = MyAddress.WEIJIIMAGE + t.getPic();
 				
 				load.getBitmap(img, url, 3,
 						TaskDetailActivity.this);
@@ -135,7 +135,7 @@ public class TaskDetailActivity extends Activity implements
 			String[] value = {String.valueOf(taskId),uname};
 			
 			HashMap<String, String> map = getMap(key, value);
-			result = ServiceData.getServiceData(map, Address.GETTASKALLINFO);
+			result = ServiceData.getServiceData(map, MyAddress.GETTASKALLINFO);
 			Message msg = handler.obtainMessage();
 			if (!result.equals("0")) {
 				msg.what = 1;

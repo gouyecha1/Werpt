@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.app.ActionBar;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 
 public class LoginActivity extends Activity {
 	private ActionBar mActionBar;
@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
 					Toast.makeText(LoginActivity.this, "请输入完整的用户名和密码",
 							Toast.LENGTH_SHORT).show();
 				} else {
-					url = Address.LOGIN;
+					url = MyAddress.LOGIN;
 					new GetDataTask().execute();
 				}
 

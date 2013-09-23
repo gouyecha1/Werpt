@@ -32,7 +32,7 @@ import android.widget.Toast;
 import com.werpt.R;
 import com.werpt.WerptDetailActivity;
 import com.werpt.bean.Werpt;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.DateFormat;
 import com.werpt.util.ImageLazyLoad;
 import com.werpt.util.ServiceData;
@@ -104,7 +104,7 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		@Override
 		protected String[] doInBackground(Void... params) {
 			result = ServiceData.getTaskData(pageCode, pageSize,
-					Address.WEIJISIMPLEINFO);
+					MyAddress.WEIJISIMPLEINFO);
 			Message msg = handler.obtainMessage();
 			if (!result.equals("0")) {
 				msg.what = 1;
@@ -180,6 +180,8 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 		public TextView title;
 		public TextView content;
 		public TextView comment;
+		public TextView share;
+		public TextView collection;
 	}
 
 	class ReportAdapter extends BaseAdapter {
@@ -221,7 +223,8 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 						.findViewById(R.id.content);
 				holder.comment = (TextView) convertView
 						.findViewById(R.id.comment);
-				
+				holder.share=(TextView) convertView.findViewById(R.id.share);
+				holder.collection=(TextView) convertView.findViewById(R.id.collection);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -231,13 +234,15 @@ public class NewReportFragment extends Fragment implements IXListViewListener,
 			holder.nickname.setText(werpt.getNickname());
 			holder.addtime.setText(werpt.getAddtime());
 			Bitmap bit = load.getBitmap(holder.pic,
-					Address.WEIJIIMAGE + werpt.getThumb());
+					MyAddress.WEIJIIMAGE + werpt.getThumb());
 			if (bit != null) {
 				holder.pic.setImageBitmap(bit);
 			}
 			holder.title.setText(werpt.getTitle());
-			holder.content.setText(Html.fromHtml(werpt.getContent()).toString());
+			holder.content.setText(Html.fromHtml(werpt.getContent()).toString().trim());
 			holder.comment.setText(werpt.getComments() + "");
+			holder.share.setText(werpt.getShares()+"");
+			holder.collection.setText(werpt.getFavs()+"");
 			return convertView;
 		}
 	}

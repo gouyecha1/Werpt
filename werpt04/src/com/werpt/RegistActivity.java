@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.ActionBarSherlock;
 import com.actionbarsherlock.app.ActionBar;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 
 public class RegistActivity extends Activity {
 
@@ -81,7 +81,7 @@ public class RegistActivity extends Activity {
 					Toast.makeText(RegistActivity.this, "请正确输入",
 							Toast.LENGTH_SHORT).show();
 				} else {
-					url = Address.REGIST;
+					url = MyAddress.REGIST;
 					new GetDataTask().execute();
 				}
 			}

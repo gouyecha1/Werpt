@@ -42,7 +42,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Toast;
 
 import com.werpt.bean.Comment;
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 
 public class ServiceData {
 
@@ -189,7 +189,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("pageCode", pageCode+""));
 			params.add(new BasicNameValuePair("pageSize", pageSize+""));
 			params.add(new BasicNameValuePair("uname", uname));
-			HttpPost request = new HttpPost(Address.WEIJIUSERALL);
+			HttpPost request = new HttpPost(MyAddress.WEIJIUSERALL);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response;
 			response = new DefaultHttpClient().execute(request);
@@ -207,7 +207,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("uname", uname));
-			HttpPost request = new HttpPost(Address.WEIJIUSERCOUNT);
+			HttpPost request = new HttpPost(MyAddress.WEIJIUSERCOUNT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response;
 			response = new DefaultHttpClient().execute(request);
@@ -240,7 +240,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("taskId", taskId+""));
-			HttpPost request = new HttpPost(Address.GETTASKALLINFO);
+			HttpPost request = new HttpPost(MyAddress.GETTASKALLINFO);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -257,7 +257,7 @@ public class ServiceData {
 		try {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("id", wid+""));
-			HttpPost request = new HttpPost(Address.WEIJIALLINFO);
+			HttpPost request = new HttpPost(MyAddress.WEIJIALLINFO);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -276,7 +276,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("id", wid+""));
 			params.add(new BasicNameValuePair("pageCode", pageCode+""));
 			params.add(new BasicNameValuePair("pageSize", pageSize+""));
-			HttpPost request = new HttpPost(Address.GETWEIJICOMMENT);
+			HttpPost request = new HttpPost(MyAddress.GETWEIJICOMMENT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){
@@ -295,7 +295,7 @@ public class ServiceData {
 			params.add(new BasicNameValuePair("id", c.getWid()+""));
 			params.add(new BasicNameValuePair("uname", c.getUname()));
 			params.add(new BasicNameValuePair("content", c.getContent()));
-			HttpPost request = new HttpPost(Address.INSERTCOMMENT);
+			HttpPost request = new HttpPost(MyAddress.INSERTCOMMENT);
 			request.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
 			HttpResponse response = new DefaultHttpClient().execute(request);
 			if(response.getStatusLine().getStatusCode()==200){

@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.werpt.costant.Address;
+import com.werpt.costant.MyAddress;
 import com.werpt.util.ServiceData;
 
 public class CameraActivity extends Activity {
@@ -191,7 +191,7 @@ public class CameraActivity extends Activity {
 	Runnable r = new Runnable() {
 		@Override
 		public void run() {
-			String savePath = Address.PICPATH ;
+			String savePath = MyAddress.PICPATH ;
 			if(!new File(savePath).exists()){
 				new File(savePath).mkdirs();
 			}
