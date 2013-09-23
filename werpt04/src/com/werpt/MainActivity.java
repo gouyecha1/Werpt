@@ -177,6 +177,9 @@ public class MainActivity extends SlidingFragmentActivity implements
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(mSlidingMenu.isMenuShowing()){
+			toggle();
+		}else{
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if ((System.currentTimeMillis() - exitTime) > 2000) {
 				Toast.makeText(MainActivity.this, "再按一次退出程序",
@@ -185,6 +188,7 @@ public class MainActivity extends SlidingFragmentActivity implements
 			} else {
 				finish();
 			}
+		}
 		}
 		return false;
 	}

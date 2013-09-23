@@ -45,7 +45,7 @@ public class LeftMenuFragment extends Fragment {
 	private String result;
 	private String url;
 	private LinearLayout user;
-	private Button picStore,videoStore;
+	private Button picStore, videoStore;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +69,8 @@ public class LeftMenuFragment extends Fragment {
 		video = (ImageView) convertView.findViewById(R.id.video);
 		write = (ImageView) convertView.findViewById(R.id.write);
 		user = (LinearLayout) convertView.findViewById(R.id.user);
-		picStore=(Button) convertView.findViewById(R.id.pic_store);
-		videoStore=(Button) convertView.findViewById(R.id.video_store);
+		picStore = (Button) convertView.findViewById(R.id.pic_store);
+		videoStore = (Button) convertView.findViewById(R.id.video_store);
 		login.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -123,25 +123,33 @@ public class LeftMenuFragment extends Fragment {
 			}
 		});
 		picStore.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				if(ServiceData.hasSDCard()){
-				Intent intent = new Intent(getActivity(),
-						MediaStoreActivity.class);
-				startActivity(intent);
-				}else{
+				if (ServiceData.hasSDCard()) {
+					Intent intent = new Intent(getActivity(),
+							PicStoreActivity.class);
+					startActivity(intent);
+				} else {
 					Toast.makeText(getActivity(), "未插入内存卡", Toast.LENGTH_SHORT)
-					.show();
+							.show();
 				}
 			}
 		});
 		videoStore.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				
+				if (ServiceData.hasSDCard()) {
+					Intent intent = new Intent(getActivity(),
+							VideoStoreActivity.class);
+					startActivity(intent);
+				} else {
+					Toast.makeText(getActivity(), "未插入内存卡", Toast.LENGTH_SHORT)
+							.show();
+				}
 			}
+
 		});
 		return convertView;
 	}

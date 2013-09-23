@@ -60,6 +60,8 @@
         </activity>
         <activity android:name="com.werpt.PicStoreActivity" >
         </activity>
+        <activity android:name="com.werpt.VideoStoreActivity" >
+        </activity>
     </application>
 
 </manifest>
