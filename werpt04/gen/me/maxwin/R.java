@@ -9,20 +9,20 @@ package me.maxwin;
 public final class R {
 	public static final class drawable {
 		public static final int ic_launcher = 0x7f020083;
-		public static final int xlistview_arrow = 0x7f0200a6;
+		public static final int xlistview_arrow = 0x7f0200a8;
 	}
 	public static final class id {
 		public static final int list_item_textview = 0x7f050058;
 		public static final int xListView = 0x7f05005e;
-		public static final int xlistview_footer_content = 0x7f050082;
-		public static final int xlistview_footer_hint_textview = 0x7f050084;
-		public static final int xlistview_footer_progressbar = 0x7f050083;
-		public static final int xlistview_header_arrow = 0x7f050089;
-		public static final int xlistview_header_content = 0x7f050085;
-		public static final int xlistview_header_hint_textview = 0x7f050087;
-		public static final int xlistview_header_progressbar = 0x7f05008a;
-		public static final int xlistview_header_text = 0x7f050086;
-		public static final int xlistview_header_time = 0x7f050088;
+		public static final int xlistview_footer_content = 0x7f050089;
+		public static final int xlistview_footer_hint_textview = 0x7f05008b;
+		public static final int xlistview_footer_progressbar = 0x7f05008a;
+		public static final int xlistview_header_arrow = 0x7f050090;
+		public static final int xlistview_header_content = 0x7f05008c;
+		public static final int xlistview_header_hint_textview = 0x7f05008e;
+		public static final int xlistview_header_progressbar = 0x7f050091;
+		public static final int xlistview_header_text = 0x7f05008d;
+		public static final int xlistview_header_time = 0x7f05008f;
 	}
 	public static final class layout {
 		public static final int list_item = 0x7f03001a;
